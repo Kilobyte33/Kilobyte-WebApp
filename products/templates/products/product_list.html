@@ -1,0 +1,84 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Marketplace — Kilobyte{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <form method="get" action="{% url 'product_list' %}" class="row g-3">
+            <div class="col-md-6">
+                <input type="text" name="q" class="form-control" placeholder="Search products..." value="{{ query }}">
+            </div>
+            <div class="col-md-4">
+                <input type="text" name="city" class="form-control" placeholder="City" value="{{ city }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mb-4">
+    <a href="{% url 'product_list' %}" class="btn btn-sm btn-outline-secondary me-1 mb-1">All</a>
+    {% for cat in categories %}
+    <a href="{% url 'category_products' cat.id %}" class="btn btn-sm btn-outline-secondary me-1 mb-1">{{ cat.name }}</a>
+    {% endfor %}
+</div>
+
+<div class="row align-items-center mb-3">
+    <div class="col">
+        <h2 class="h4 mb-0">{% if query %}Search Results{% elif city %}Results in {{ city }}{% else %}Latest Products{% endif %}</h2>
+    </div>
+    <div class="col-auto text-muted">
+        {{ page_obj.paginator.count }} products found
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    {% for product in page_obj %}
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+            {% else %}
+            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                <i class="bi bi-image text-muted fs-1"></i>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title h6">{{ product.name|truncatechars:40 }}</h5>
+                <p class="card-text fw-bold text-primary">${{ product.price }}</p>
+                {% if product.city %}
+                <p class="card-text small text-muted"><i class="bi bi-geo-alt"></i> {{ product.city }}</p>
+                {% endif %}
+                <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <p class="text-muted">No products found matching your search.</p>
+        <a href="{% url 'product_list' %}" class="btn btn-link">Clear all filters</a>
+    </div>
+    {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="mt-5">
+    <ul class="pagination pagination-sm justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&city={{ city }}">Previous</a>
+        </li>
+        {% endif %}
+        <li class="page-item disabled px-3 py-1 text-muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&city={{ city }}">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

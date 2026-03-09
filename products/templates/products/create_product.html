@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Post a Product — Kilobyte{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card border shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h4 mb-4">Post a Product</h2>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                    <div class="alert alert-danger small">
+                        <strong>Errors:</strong> {{ form.errors }}
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Product Name *</label>
+                        {{ form.name }}
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Category *</label>
+                            {{ form.category }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">City</label>
+                            {{ form.city }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Description *</label>
+                        {{ form.description }}
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Price ($) *</label>
+                            {{ form.price }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Phone Number</label>
+                            {{ form.phone }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Product Image</label>
+                        {{ form.image }}
+                    </div>
+
+                    <div class="card bg-light mb-4">
+                        <div class="card-body py-2">
+                            <div class="form-check">
+                                {{ form.is_wholesale }}
+                                <label class="form-check-label small fw-bold"
+                                    for="{{ form.is_wholesale.id_for_label }}">Bulk Listing</label>
+                            </div>
+                            <div class="row g-2 mt-1">
+                                <div class="col-md-6">
+                                    <label class="form-label x-small text-muted">Bulk Price</label>
+                                    {{ form.bulk_price }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label x-small text-muted">Min Qty</label>
+                                    {{ form.minimum_quantity }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Post Product</button>
+                        <a href="{% url 'my_listings' %}" class="btn btn-outline-secondary btn-sm">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+        if (el.type !== 'checkbox' && el.type !== 'radio') {
+            el.classList.add('form-control');
+            if (el.tagName === 'SELECT') el.classList.add('form-select');
+        }
+    });
+</script>
+{% endblock %}

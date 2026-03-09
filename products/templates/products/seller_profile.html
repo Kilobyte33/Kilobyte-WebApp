@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}{{ seller.username }}'s Store — Kilobyte{% endblock %}
+
+{% block content %}
+<div class="card bg-light mb-4 text-center">
+    <div class="card-body py-5">
+        {% if seller.profile.avatar %}
+        <img src="{{ seller.profile.avatar.url }}" class="rounded-circle mb-3 border"
+            style="width: 100px; height: 100px; object-fit: cover;">
+        {% else %}
+        <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center mb-3 text-white"
+            style="width: 100px; height: 100px;">
+            <i class="bi bi-person-fill fs-1"></i>
+        </div>
+        {% endif %}
+        <h2 class="h3 fw-bold">{{ seller.username }}</h2>
+        {% if seller.profile.location %}<p class="text-muted"><i class="bi bi-geo-alt"></i> {{ seller.profile.location
+            }}</p>{% endif %}
+        {% if seller.profile.bio %}<p class="small text-muted">{{ seller.profile.bio }}</p>{% endif %}
+
+        <div class="mt-3">
+            <span class="badge bg-primary">{{ products.count }} Listings</span>
+            {% if avg_rating %}
+            <span class="badge bg-warning text-dark">{{ avg_rating|floatformat:1 }} <i class="bi bi-star-fill"></i> ({{
+                reviews.count }} reviews)</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-8">
+        <h4 class="border-bottom pb-2">All Listings</h4>
+        <div class="row row-cols-1 row-cols-sm-2 g-3 mt-1">
+            {% for product in products %}
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 bg-light">
+                    <div class="card-body d-flex gap-3">
+                        <div style="width: 80px; height: 80px;">
+                            {% if product.image %}
+                            <img src="{{ product.image.url }}" class="img-fluid rounded"
+                                style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
+                            <div
+                                class="bg-white rounded d-flex align-items-center justify-content-center h-100 w-100 border">
+                                <i class="bi bi-image text-muted"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="h6 mb-1">{{ product.name|truncatechars:30 }}</h5>
+                            <p class="text-primary fw-bold mb-2">${{ product.price }}</p>
+                            <a href="{% url 'product_detail' product.id %}" class="btn btn-sm btn-outline-dark">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-muted">No active listings.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h4 class="border-bottom pb-2">Reviews</h4>
+        {% if review_form %}
+        <form action="{% url 'leave_review' seller.username %}" method="post" class="mb-4">
+            {% csrf_token %}
+            <div class="mb-2">
+                <select name="rating" class="form-select form-select-sm">
+                    {% for val, label in review_form.fields.rating.choices %}
+                    <option value="{{ val }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-2">
+                <input type="text" name="comment" class="form-control form-control-sm" placeholder="Optional comment">
+            </div>
+            <button type="submit" class="btn btn-sm btn-dark w-100">Submit Review</button>
+        </form>
+        {% endif %}
+
+        {% for review in reviews %}
+        <div class="mb-3 border-bottom pb-2">
+            <div class="d-flex justify-content-between">
+                <span class="small fw-bold">{{ review.reviewer.username }}</span>
+                <span class="small text-warning">
+                    {% for i in "12345"|make_list %}{% if forloop.counter <= review.rating %}<i class="bi bi-star-fill">
+                        </i>{% else %}<i class="bi bi-star"></i>{% endif %}{% endfor %}
+                </span>
+            </div>
+            {% if review.comment %}<p class="x-small text-muted mb-0">{{ review.comment }}</p>{% endif %}
+        </div>
+        {% empty %}
+        <p class="text-muted small">No reviews yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
