@@ -1,84 +1,477 @@
-﻿{% extends 'base.html' %}
+{% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Marketplace — Kilobyte{% endblock %}
+{% block title %}Kilobyte Marketplace{% endblock %}
+
+{% block style %}
+<style>
+    .market-shell {
+        display: grid;
+        gap: 2rem;
+    }
+
+    .market-hero,
+    .filter-panel,
+    .result-toolbar,
+    .product-card,
+    .empty-state {
+        background: rgba(255, 255, 255, 0.84);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        box-shadow: 0 18px 50px rgba(15, 37, 74, 0.08);
+        backdrop-filter: blur(14px);
+    }
+
+    .market-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 2rem;
+        border-radius: 2rem;
+    }
+
+    .market-hero::after {
+        content: "";
+        position: absolute;
+        top: -4rem;
+        right: -4rem;
+        width: 16rem;
+        height: 16rem;
+        border-radius: 50%;
+        background: rgba(15, 98, 254, 0.10);
+        filter: blur(8px);
+    }
+
+    .hero-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.45rem 0.85rem;
+        border-radius: 999px;
+        background: rgba(15, 98, 254, 0.10);
+        color: #0a47b8;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .market-hero h1 {
+        margin: 1rem 0 0.8rem;
+        font-size: clamp(2rem, 4vw, 3.4rem);
+        line-height: 1;
+        letter-spacing: -0.05em;
+        font-weight: 800;
+        color: var(--kb-ink);
+    }
+
+    .market-hero p {
+        max-width: 40rem;
+        margin-bottom: 0;
+        color: var(--kb-copy);
+        line-height: 1.8;
+    }
+
+    .market-hero img {
+        max-height: 260px;
+        object-fit: contain;
+    }
+
+    .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .hero-stat {
+        padding: 1rem;
+        border-radius: 1.1rem;
+        background: rgba(243, 246, 251, 0.9);
+    }
+
+    .hero-stat strong {
+        display: block;
+        font-size: 1.1rem;
+        font-weight: 800;
+    }
+
+    .hero-stat span {
+        display: block;
+        margin-top: 0.25rem;
+        color: var(--kb-copy);
+        font-size: 0.92rem;
+    }
+
+    .filter-panel {
+        padding: 1.5rem;
+        border-radius: 1.6rem;
+    }
+
+    .filter-title {
+        margin-bottom: 1rem;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--kb-ink);
+    }
+
+    .filter-panel .form-control {
+        min-height: 3.25rem;
+        border-radius: 1rem;
+        border: 1px solid rgba(22, 32, 51, 0.10);
+        background: rgba(255, 255, 255, 0.92);
+        padding: 0.85rem 1rem;
+    }
+
+    .filter-panel .form-control:focus {
+        border-color: rgba(15, 98, 254, 0.45);
+        box-shadow: 0 0 0 0.2rem rgba(15, 98, 254, 0.10);
+    }
+
+    .btn-kb-search,
+    .btn-kb-clear,
+    .category-pill,
+    .product-link {
+        border-radius: 999px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    .btn-kb-search {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+        min-height: 3.25rem;
+        width: 100%;
+        border: 0;
+        background: linear-gradient(135deg, var(--kb-brand), var(--kb-brand-deep));
+        color: #fff;
+        box-shadow: 0 16px 28px rgba(15, 98, 254, 0.20);
+    }
+
+    .btn-kb-clear {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.8rem 1rem;
+        background: rgba(22, 32, 51, 0.06);
+        color: var(--kb-ink);
+    }
+
+    .btn-kb-search:hover,
+    .btn-kb-clear:hover,
+    .category-pill:hover,
+    .product-link:hover {
+        transform: translateY(-2px);
+    }
+
+    .category-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .category-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.7rem 1rem;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(22, 32, 51, 0.08);
+        color: var(--kb-ink);
+        box-shadow: 0 10px 24px rgba(15, 37, 74, 0.06);
+    }
+
+    .result-toolbar {
+        padding: 1.2rem 1.4rem;
+        border-radius: 1.4rem;
+    }
+
+    .result-toolbar h2 {
+        margin-bottom: 0.3rem;
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--kb-ink);
+    }
+
+    .result-toolbar p,
+    .result-toolbar span {
+        color: var(--kb-copy);
+        margin-bottom: 0;
+    }
+
+    .product-card {
+        overflow: hidden;
+        height: 100%;
+        border-radius: 1.5rem;
+    }
+
+    .product-media {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+        background: linear-gradient(180deg, #eff4fb, #ffffff);
+    }
+
+    .product-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.35s ease;
+    }
+
+    .product-card:hover .product-media img {
+        transform: scale(1.04);
+    }
+
+    .product-placeholder {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--kb-copy-soft);
+        font-size: 2.5rem;
+    }
+
+    .product-body {
+        padding: 1.35rem;
+    }
+
+    .product-title {
+        margin-bottom: 0.6rem;
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--kb-ink);
+    }
+
+    .product-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .product-price {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--kb-brand-deep);
+    }
+
+    .product-city {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        color: var(--kb-copy);
+        font-size: 0.92rem;
+    }
+
+    .product-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.85rem 1rem;
+        background: rgba(15, 98, 254, 0.08);
+        color: var(--kb-brand-deep);
+    }
+
+    .empty-state {
+        padding: 3rem 1.5rem;
+        border-radius: 1.6rem;
+        text-align: center;
+    }
+
+    .empty-state i {
+        font-size: 2.4rem;
+        color: var(--kb-copy-soft);
+    }
+
+    .empty-state h3 {
+        margin-top: 1rem;
+        font-size: 1.3rem;
+        font-weight: 800;
+    }
+
+    .empty-state p {
+        color: var(--kb-copy);
+        margin-bottom: 1rem;
+    }
+
+    .pagination {
+        gap: 0.6rem;
+    }
+
+    .page-link,
+    .page-pill {
+        border-radius: 999px !important;
+        border: 0 !important;
+        padding: 0.75rem 1rem;
+        color: var(--kb-ink);
+        background: rgba(255, 255, 255, 0.85);
+        box-shadow: 0 10px 24px rgba(15, 37, 74, 0.08);
+    }
+
+    .page-pill {
+        display: inline-flex;
+        align-items: center;
+        color: var(--kb-copy);
+    }
+
+    @media (max-width: 991.98px) {
+        .hero-stats {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col-md-12">
-        <form method="get" action="{% url 'product_list' %}" class="row g-3">
-            <div class="col-md-6">
-                <input type="text" name="q" class="form-control" placeholder="Search products..." value="{{ query }}">
+<div class="market-shell">
+    <section class="market-hero">
+        <div class="row align-items-center g-4 position-relative">
+            <div class="col-lg-7">
+                <span class="hero-label"><i class="bi bi-stars"></i> Marketplace directory</span>
+                <h1>Browse listings with a cleaner, more credible storefront.</h1>
+                <p>Search faster, filter by city, and scan products in a layout that feels more trustworthy for both buyers and sellers.</p>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <strong>{{ page_obj.paginator.count }}</strong>
+                        <span>active products available to browse</span>
+                    </div>
+                    <div class="hero-stat">
+                        <strong>{{ categories|length }}</strong>
+                        <span>categories to explore across the marketplace</span>
+                    </div>
+                    <div class="hero-stat">
+                        <strong>Local-first</strong>
+                        <span>search by item name or city to narrow results quickly</span>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4">
-                <input type="text" name="city" class="form-control" placeholder="City" value="{{ city }}">
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Search</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div class="mb-4">
-    <a href="{% url 'product_list' %}" class="btn btn-sm btn-outline-secondary me-1 mb-1">All</a>
-    {% for cat in categories %}
-    <a href="{% url 'category_products' cat.id %}" class="btn btn-sm btn-outline-secondary me-1 mb-1">{{ cat.name }}</a>
-    {% endfor %}
-</div>
-
-<div class="row align-items-center mb-3">
-    <div class="col">
-        <h2 class="h4 mb-0">{% if query %}Search Results{% elif city %}Results in {{ city }}{% else %}Latest Products{% endif %}</h2>
-    </div>
-    <div class="col-auto text-muted">
-        {{ page_obj.paginator.count }} products found
-    </div>
-</div>
-
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-    {% for product in page_obj %}
-    <div class="col">
-        <div class="card h-100 shadow-sm">
-            {% if product.image %}
-            <img src="{{ product.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
-            {% else %}
-            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                <i class="bi bi-image text-muted fs-1"></i>
-            </div>
-            {% endif %}
-            <div class="card-body">
-                <h5 class="card-title h6">{{ product.name|truncatechars:40 }}</h5>
-                <p class="card-text fw-bold text-primary">${{ product.price }}</p>
-                {% if product.city %}
-                <p class="card-text small text-muted"><i class="bi bi-geo-alt"></i> {{ product.city }}</p>
-                {% endif %}
-                <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+            <div class="col-lg-5 text-center">
+                <img src="{% static 'products/img/marketplace_illustration.png' %}" alt="Marketplace Illustration" class="img-fluid">
             </div>
         </div>
-    </div>
-    {% empty %}
-    <div class="col-12 text-center py-5">
-        <p class="text-muted">No products found matching your search.</p>
-        <a href="{% url 'product_list' %}" class="btn btn-link">Clear all filters</a>
-    </div>
-    {% endfor %}
-</div>
+    </section>
 
-{% if page_obj.has_other_pages %}
-<nav class="mt-5">
-    <ul class="pagination pagination-sm justify-content-center">
-        {% if page_obj.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&city={{ city }}">Previous</a>
-        </li>
-        {% endif %}
-        <li class="page-item disabled px-3 py-1 text-muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
-        {% if page_obj.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&city={{ city }}">Next</a>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
-{% endif %}
+    <section class="filter-panel">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-3">
+            <div>
+                <h2 class="filter-title mb-1">Find the right product quickly</h2>
+                <p class="text-muted mb-0">Search by keyword, narrow by city, or jump directly into a category.</p>
+            </div>
+            {% if query or city %}
+            <a href="{% url 'product_list' %}" class="btn-kb-clear"><i class="bi bi-arrow-counterclockwise"></i> Clear filters</a>
+            {% endif %}
+        </div>
+
+        <form method="get" action="{% url 'product_list' %}" class="row g-3">
+            <div class="col-lg-5">
+                <input type="text" name="q" class="form-control" placeholder="Search for laptops, phones, furniture..." value="{{ query }}">
+            </div>
+            <div class="col-lg-4">
+                <input type="text" name="city" class="form-control" placeholder="Filter by city" value="{{ city }}">
+            </div>
+            <div class="col-lg-3">
+                <button type="submit" class="btn-kb-search">
+                    <i class="bi bi-search"></i>
+                    Search Marketplace
+                </button>
+            </div>
+        </form>
+
+        <div class="category-row mt-4">
+            <a href="{% url 'product_list' %}" class="category-pill">All Categories</a>
+            {% for cat in categories %}
+            <a href="{% url 'category_products' cat.id %}" class="category-pill">{{ cat.name }}</a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="result-toolbar">
+        <div class="row align-items-center g-3">
+            <div class="col-md">
+                <h2>{% if query %}Search Results{% elif city %}Products in {{ city }}{% else %}Latest Products{% endif %}</h2>
+                <p>
+                    {% if query and city %}
+                    Showing matches for "{{ query }}" in {{ city }}.
+                    {% elif query %}
+                    Showing matches for "{{ query }}".
+                    {% elif city %}
+                    Showing listings available in {{ city }}.
+                    {% else %}
+                    Explore the newest products added to Kilobyte.
+                    {% endif %}
+                </p>
+            </div>
+            <div class="col-md-auto">
+                <span>{{ page_obj.paginator.count }} products found</span>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+            {% for product in page_obj %}
+            <div class="col">
+                <article class="product-card">
+                    <div class="product-media">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                        <div class="product-placeholder">
+                            <i class="bi bi-image"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-title">{{ product.name|truncatechars:42 }}</h3>
+                        <div class="product-meta">
+                            <span class="product-price">${{ product.price }}</span>
+                            {% if product.city %}
+                            <span class="product-city"><i class="bi bi-geo-alt"></i> {{ product.city }}</span>
+                            {% endif %}
+                        </div>
+                        <a href="{% url 'product_detail' product.id %}" class="product-link">
+                            <i class="bi bi-arrow-right-circle"></i>
+                            View Details
+                        </a>
+                    </div>
+                </article>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="bi bi-inboxes"></i>
+                    <h3>No products found</h3>
+                    <p>Try a broader search term, remove the city filter, or browse the full marketplace.</p>
+                    <a href="{% url 'product_list' %}" class="btn-kb-clear">Reset search</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% if page_obj.has_other_pages %}
+    <nav class="mt-2">
+        <ul class="pagination justify-content-center align-items-center mb-0">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&city={{ city }}">Previous</a>
+            </li>
+            {% endif %}
+            <li class="page-item">
+                <span class="page-pill">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&city={{ city }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
 {% endblock %}

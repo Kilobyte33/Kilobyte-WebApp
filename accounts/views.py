@@ -1,14 +1,22 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
 from django.contrib import messages
-from django.contrib.auth.models import User
-from .forms import CustomUserCreationForm, ProfileForm
+from .forms import CustomUserCreationForm, ProfileForm, ZimbabweAuthenticationForm
 
 
 def home(request):
     if request.user.is_authenticated:
         return redirect('product_list')
-    return render(request, 'accounts/home.html')
+    from products.models import Category, Product
+
+    featured_products = Product.objects.filter(status='active').select_related('category').order_by('-created_at')[:8]
+    featured_categories = Category.objects.order_by('name')[:6]
+
+    return render(request, 'accounts/home.html', {
+        'featured_products': featured_products,
+        'featured_categories': featured_categories,
+    })
 
 
 def signup(request):
@@ -21,6 +29,11 @@ def signup(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'accounts/signup.html', {'form': form})
+
+
+class ZimbabweLoginView(LoginView):
+    template_name = 'accounts/login.html'
+    authentication_form = ZimbabweAuthenticationForm
 
 
 @login_required

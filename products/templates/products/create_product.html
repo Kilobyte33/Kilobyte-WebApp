@@ -1,87 +1,359 @@
 {% extends 'base.html' %}
-{% block title %}Post a Product — Kilobyte{% endblock %}
+{% block title %}Post a Product - Kilobyte{% endblock %}
+
+{% block style %}
+<style>
+    .seller-shell {
+        display: grid;
+        gap: 2rem;
+    }
+
+    .seller-hero,
+    .seller-panel,
+    .seller-submit {
+        background: var(--kb-panel);
+        border: 1px solid var(--kb-line);
+        box-shadow: var(--kb-shadow);
+        backdrop-filter: blur(14px);
+    }
+
+    .seller-hero {
+        padding: 2rem;
+        border-radius: 2rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .seller-hero::after {
+        content: "";
+        position: absolute;
+        top: -4rem;
+        right: -4rem;
+        width: 14rem;
+        height: 14rem;
+        border-radius: 50%;
+        background: rgba(15, 98, 254, 0.10);
+        filter: blur(8px);
+    }
+
+    .seller-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.45rem 0.85rem;
+        border-radius: 999px;
+        background: rgba(15, 98, 254, 0.10);
+        color: var(--kb-brand-deep);
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .seller-hero h1 {
+        margin: 1rem 0 0.6rem;
+        font-size: clamp(2rem, 4vw, 3.4rem);
+        line-height: 1;
+        letter-spacing: -0.05em;
+        font-weight: 800;
+        color: var(--kb-ink);
+    }
+
+    .seller-hero p {
+        max-width: 40rem;
+        margin: 0;
+        color: var(--kb-copy);
+        line-height: 1.75;
+    }
+
+    .seller-panel,
+    .seller-submit {
+        border-radius: 1.7rem;
+    }
+
+    .seller-panel {
+        padding: 1.7rem;
+    }
+
+    .panel-section + .panel-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(22, 32, 51, 0.08);
+    }
+
+    .panel-title {
+        margin-bottom: 0.35rem;
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--kb-ink);
+    }
+
+    .panel-copy {
+        margin-bottom: 1.15rem;
+        color: var(--kb-copy);
+        font-size: 0.95rem;
+    }
+
+    .seller-panel .form-label {
+        margin-bottom: 0.45rem;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        color: var(--kb-ink);
+    }
+
+    .seller-panel .form-control,
+    .seller-panel .form-select {
+        min-height: 3.2rem;
+        border-radius: 1rem;
+        border: 1px solid var(--kb-line);
+        background: rgba(255, 255, 255, 0.94);
+        color: var(--kb-ink);
+        padding: 0.9rem 1rem;
+        box-shadow: none;
+    }
+
+    html[data-theme="dark"] .seller-panel .form-control,
+    html[data-theme="dark"] .seller-panel .form-select {
+        background: rgba(10, 18, 34, 0.72);
+        color: var(--kb-ink);
+    }
+
+    html[data-theme="dark"] .seller-panel .form-control::placeholder {
+        color: var(--kb-copy-soft);
+    }
+
+    .seller-panel textarea.form-control {
+        min-height: 9rem;
+        resize: vertical;
+    }
+
+    .seller-panel .form-control:focus,
+    .seller-panel .form-select:focus {
+        border-color: rgba(15, 98, 254, 0.45);
+        box-shadow: 0 0 0 0.2rem rgba(15, 98, 254, 0.10);
+    }
+
+    .seller-panel input[type="file"] {
+        padding-top: 0.75rem;
+    }
+
+    .field-note,
+    .seller-shell p {
+        color: var(--kb-copy);
+        font-size: 0.94rem;
+        line-height: 1.7;
+    }
+
+    .seller-errors {
+        padding: 1rem 1.1rem;
+        margin-bottom: 1.3rem;
+        border-radius: 1rem;
+        background: rgba(220, 53, 69, 0.08);
+        color: #9f1c2d;
+        border: 1px solid rgba(220, 53, 69, 0.12);
+    }
+
+    .wholesale-box {
+        padding: 1.1rem;
+        border-radius: 1.2rem;
+        background: rgba(15, 98, 254, 0.05);
+        border: 1px solid rgba(15, 98, 254, 0.10);
+    }
+
+    .wholesale-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin-bottom: 1rem;
+    }
+
+    .wholesale-toggle .form-check-input {
+        width: 1.1rem;
+        height: 1.1rem;
+        margin-top: 0;
+    }
+
+    .wholesale-toggle .form-check-label {
+        margin-bottom: 0;
+        font-size: 0.95rem;
+        font-weight: 800;
+        text-transform: none;
+    }
+
+    .seller-submit {
+        padding: 1.4rem;
+    }
+
+    .seller-submit h2 {
+        margin-bottom: 0.35rem;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--kb-ink);
+    }
+
+    .seller-submit p {
+        margin-bottom: 1rem;
+        color: var(--kb-copy);
+    }
+
+    .btn-seller-primary,
+    .btn-seller-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+        width: 100%;
+        min-height: 3.2rem;
+        border-radius: 999px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-seller-primary {
+        border: 0;
+        color: #fff;
+        background: linear-gradient(135deg, var(--kb-brand), var(--kb-brand-deep));
+        box-shadow: 0 16px 30px rgba(15, 98, 254, 0.22);
+    }
+
+    .btn-seller-secondary {
+        color: var(--kb-ink);
+        background: rgba(22, 32, 51, 0.06);
+    }
+
+    .btn-seller-primary:hover,
+    .btn-seller-secondary:hover {
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-7">
-        <div class="card border shadow-sm">
-            <div class="card-body p-4">
-                <h2 class="h4 mb-4">Post a Product</h2>
-
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-
-                    {% if form.errors %}
-                    <div class="alert alert-danger small">
-                        <strong>Errors:</strong> {{ form.errors }}
-                    </div>
-                    {% endif %}
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Product Name *</label>
-                        {{ form.name }}
-                    </div>
-
-                    <div class="row g-2 mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold">Category *</label>
-                            {{ form.category }}
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold">City</label>
-                            {{ form.city }}
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Description *</label>
-                        {{ form.description }}
-                    </div>
-
-                    <div class="row g-2 mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold">Price ($) *</label>
-                            {{ form.price }}
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold">Phone Number</label>
-                            {{ form.phone }}
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Product Image</label>
-                        {{ form.image }}
-                    </div>
-
-                    <div class="card bg-light mb-4">
-                        <div class="card-body py-2">
-                            <div class="form-check">
-                                {{ form.is_wholesale }}
-                                <label class="form-check-label small fw-bold"
-                                    for="{{ form.is_wholesale.id_for_label }}">Bulk Listing</label>
-                            </div>
-                            <div class="row g-2 mt-1">
-                                <div class="col-md-6">
-                                    <label class="form-label x-small text-muted">Bulk Price</label>
-                                    {{ form.bulk_price }}
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label x-small text-muted">Min Qty</label>
-                                    {{ form.minimum_quantity }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Post Product</button>
-                        <a href="{% url 'my_listings' %}" class="btn btn-outline-secondary btn-sm">Cancel</a>
-                    </div>
-                </form>
+<div class="seller-shell">
+    <section class="seller-hero">
+        <div class="row align-items-center g-3 position-relative">
+            <div class="col-lg-8">
+                <span class="seller-kicker"><i class="bi bi-shop"></i> Seller studio</span>
+                <h1>Create a listing that looks ready to sell.</h1>
+                <p>Clean details, a strong photo, and the right price give buyers confidence fast.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{% url 'my_listings' %}" class="btn-seller-secondary">View My Listings</a>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section class="seller-panel">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% if form.errors %}
+            <div class="seller-errors small">
+                Please fix the highlighted fields and try again.
+            </div>
+            {% endif %}
+
+            <div class="panel-section">
+                <h2 class="panel-title">Product details</h2>
+                <p class="panel-copy">Start with the information buyers notice first.</p>
+
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.name.id_for_label }}">Product Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}<div class="text-danger small mt-1">{{ form.name.errors|striptags }}</div>{% endif %}
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.category.id_for_label }}">Category</label>
+                        {{ form.category }}
+                        {% if form.category.errors %}<div class="text-danger small mt-1">{{ form.category.errors|striptags }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.city.id_for_label }}">City</label>
+                        {{ form.city }}
+                        {% if form.city.errors %}<div class="text-danger small mt-1">{{ form.city.errors|striptags }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.description.id_for_label }}">Description</label>
+                    {{ form.description }}
+                    <div class="field-note mt-2">Keep it clear, short, and specific.</div>
+                    {% if form.description.errors %}<div class="text-danger small mt-1">{{ form.description.errors|striptags }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h2 class="panel-title">Pricing and contact</h2>
+                <p class="panel-copy">Make it easy for serious buyers to decide quickly.</p>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.price.id_for_label }}">Price ($)</label>
+                        {{ form.price }}
+                        {% if form.price.errors %}<div class="text-danger small mt-1">{{ form.price.errors|striptags }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.phone.id_for_label }}">Phone Number</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}<div class="text-danger small mt-1">{{ form.phone.errors|striptags }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.image.id_for_label }}">Product Image</label>
+                    {{ form.image }}
+                    <div class="field-note mt-2">Bright, clean photos usually perform best.</div>
+                    {% if form.image.errors %}<div class="text-danger small mt-1">{{ form.image.errors|striptags }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h2 class="panel-title">Wholesale options</h2>
+                <p class="panel-copy">Turn this on only if you are selling in bulk.</p>
+
+                <div class="wholesale-box">
+                    <div class="wholesale-toggle form-check">
+                        {{ form.is_wholesale }}
+                        <label class="form-check-label" for="{{ form.is_wholesale.id_for_label }}">This is a bulk listing</label>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="{{ form.bulk_price.id_for_label }}">Bulk Price</label>
+                            {{ form.bulk_price }}
+                            {% if form.bulk_price.errors %}<div class="text-danger small mt-1">{{ form.bulk_price.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="{{ form.minimum_quantity.id_for_label }}">Minimum Quantity</label>
+                            {{ form.minimum_quantity }}
+                            {% if form.minimum_quantity.errors %}<div class="text-danger small mt-1">{{ form.minimum_quantity.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="seller-submit mt-4">
+                <h2>Ready to publish?</h2>
+                <p>Your listing will go live as soon as you post it.</p>
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <button type="submit" class="btn-seller-primary">
+                            <i class="bi bi-send"></i>
+                            Post Product
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{% url 'my_listings' %}" class="btn-seller-secondary">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
 </div>
 
 <script>

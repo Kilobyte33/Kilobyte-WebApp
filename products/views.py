@@ -12,6 +12,7 @@ from .forms import ProductForm, ReviewForm
 
 # ─── Public Views ────────────────────────────────────────────────────────────
 
+@login_required
 def product_list(request):
     query = request.GET.get('q', '').strip()
     city = request.GET.get('city', '').strip()
@@ -51,6 +52,7 @@ def product_list(request):
     })
 
 
+@login_required
 def product_detail(request, id):
     product = get_object_or_404(Product, id=id)
 
@@ -83,6 +85,7 @@ def product_detail(request, id):
     })
 
 
+@login_required
 def category_products(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     products = Product.objects.filter(category=category, status='active').select_related('owner')
@@ -97,6 +100,7 @@ def category_products(request, category_id):
     })
 
 
+@login_required
 def seller_profile(request, username):
     seller = get_object_or_404(User, username=username)
     products = Product.objects.filter(owner=seller, status='active').order_by('-created_at')

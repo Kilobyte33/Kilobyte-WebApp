@@ -1,13 +1,486 @@
 {% extends 'base.html' %}
-{% block title %}Welcome — Bobar{% endblock %}
+{% load static %}
+{% block title %}Kilobyte Marketplace{% endblock %}
+
+{% block nav_margin %}{% endblock %}
+
+{% block style %}
+<style>
+    :root {
+        --home-ink: #111c31;
+        --home-copy: #607089;
+        --home-panel: rgba(255, 255, 255, 0.88);
+        --home-line: rgba(17, 28, 49, 0.08);
+        --home-brand: #0f62fe;
+        --home-brand-deep: #0a47b8;
+        --home-glow: rgba(15, 98, 254, 0.16);
+    }
+
+    .home-shell {
+        padding-bottom: 4rem;
+    }
+
+    .hero-block {
+        position: relative;
+        overflow: hidden;
+        padding: 4rem 0 2.5rem;
+    }
+
+    .hero-block::before,
+    .hero-block::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(18px);
+        z-index: 0;
+    }
+
+    .hero-block::before {
+        top: -5rem;
+        left: -4rem;
+        width: 18rem;
+        height: 18rem;
+        background: rgba(15, 98, 254, 0.14);
+    }
+
+    .hero-block::after {
+        right: -3rem;
+        top: 2rem;
+        width: 14rem;
+        height: 14rem;
+        background: rgba(40, 199, 111, 0.10);
+    }
+
+    .hero-copy,
+    .hero-stage {
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.95rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(15, 98, 254, 0.10);
+        color: var(--home-brand-deep);
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        box-shadow: 0 14px 34px rgba(15, 37, 74, 0.08);
+    }
+
+    .hero-title {
+        margin: 1rem 0 1rem;
+        font-size: clamp(3rem, 7vw, 5.6rem);
+        line-height: 0.92;
+        letter-spacing: -0.07em;
+        font-weight: 800;
+        color: var(--home-ink);
+    }
+
+    .hero-subtitle {
+        max-width: 34rem;
+        color: var(--home-copy);
+        font-size: 1.05rem;
+        line-height: 1.75;
+        margin-bottom: 1.6rem;
+    }
+
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .home-btn-primary,
+    .home-btn-secondary,
+    .category-chip,
+    .quick-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    .home-btn-primary {
+        padding: 1rem 1.45rem;
+        color: #fff;
+        background: linear-gradient(135deg, var(--home-brand), var(--home-brand-deep));
+        box-shadow: 0 18px 38px rgba(15, 98, 254, 0.25);
+    }
+
+    .home-btn-secondary {
+        padding: 1rem 1.45rem;
+        color: var(--home-ink);
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid var(--home-line);
+        box-shadow: 0 14px 30px rgba(15, 37, 74, 0.08);
+    }
+
+    .home-btn-primary:hover,
+    .home-btn-secondary:hover,
+    .category-chip:hover,
+    .quick-link:hover,
+    .listing-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .hero-categories {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.75rem;
+    }
+
+    .category-chip {
+        padding: 0.75rem 1rem;
+        color: var(--home-ink);
+        background: rgba(255, 255, 255, 0.74);
+        border: 1px solid var(--home-line);
+        box-shadow: 0 12px 26px rgba(15, 37, 74, 0.06);
+    }
+
+    .stage-shell {
+        position: relative;
+        padding: 1.2rem;
+        border-radius: 2rem;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.80));
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        box-shadow: 0 26px 70px rgba(15, 37, 74, 0.14);
+    }
+
+    .stage-visual {
+        width: 100%;
+        border-radius: 1.4rem;
+        display: block;
+        background: linear-gradient(180deg, #eef4ff, #ffffff);
+    }
+
+    .stage-badge {
+        position: absolute;
+        right: -0.8rem;
+        bottom: 1.4rem;
+        padding: 1rem 1.15rem;
+        border-radius: 1.2rem;
+        background: rgba(10, 18, 34, 0.94);
+        color: #fff;
+        box-shadow: 0 24px 54px rgba(7, 15, 30, 0.24);
+    }
+
+    .stage-badge strong {
+        display: block;
+        font-size: 0.98rem;
+        font-weight: 800;
+    }
+
+    .stage-badge span {
+        display: block;
+        margin-top: 0.3rem;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 0.84rem;
+    }
+
+    .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-head h2 {
+        margin-bottom: 0.35rem;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        letter-spacing: -0.05em;
+        font-weight: 800;
+        color: var(--home-ink);
+    }
+
+    .section-head p {
+        margin: 0;
+        color: var(--home-copy);
+    }
+
+    .quick-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 2rem 0 3rem;
+    }
+
+    .quick-link {
+        padding: 0.85rem 1rem;
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid var(--home-line);
+        color: var(--home-ink);
+        box-shadow: 0 12px 24px rgba(15, 37, 74, 0.06);
+    }
+
+    .listing-card {
+        height: 100%;
+        overflow: hidden;
+        border-radius: 1.55rem;
+        background: var(--home-panel);
+        border: 1px solid rgba(255, 255, 255, 0.92);
+        box-shadow: 0 18px 44px rgba(15, 37, 74, 0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .listing-media {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+        background: linear-gradient(180deg, #eff4fb, #ffffff);
+    }
+
+    .listing-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .listing-placeholder {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #8b97ab;
+        font-size: 2.4rem;
+    }
+
+    .listing-tag {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        padding: 0.45rem 0.8rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.92);
+        color: var(--home-ink);
+        font-size: 0.78rem;
+        font-weight: 800;
+        box-shadow: 0 10px 22px rgba(15, 37, 74, 0.08);
+    }
+
+    .listing-body {
+        padding: 1.25rem;
+    }
+
+    .listing-title {
+        margin-bottom: 0.65rem;
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--home-ink);
+    }
+
+    .listing-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .listing-price {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--home-brand-deep);
+    }
+
+    .listing-city {
+        font-size: 0.92rem;
+        color: var(--home-copy);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .mini-banner {
+        margin-top: 3rem;
+        padding: 1.6rem 1.8rem;
+        border-radius: 1.8rem;
+        background: linear-gradient(135deg, rgba(15, 98, 254, 0.10), rgba(255, 255, 255, 0.88));
+        border: 1px solid rgba(255, 255, 255, 0.94);
+        box-shadow: 0 18px 40px rgba(15, 37, 74, 0.08);
+    }
+
+    .mini-banner h3 {
+        margin-bottom: 0.35rem;
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--home-ink);
+    }
+
+    .mini-banner p {
+        margin: 0;
+        color: var(--home-copy);
+    }
+
+    @media (max-width: 991.98px) {
+        .hero-block {
+            padding-top: 3rem;
+        }
+
+        .hero-stage {
+            margin-top: 1.8rem;
+        }
+
+        .stage-badge {
+            position: static;
+            margin-top: 1rem;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .hero-actions,
+        .hero-categories,
+        .quick-links {
+            display: grid;
+        }
+
+        .home-btn-primary,
+        .home-btn-secondary,
+        .category-chip,
+        .quick-link {
+            width: 100%;
+        }
+
+        .section-head {
+            display: block;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block full_width_content %}
+<div class="home-shell">
+    <section class="hero-block">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 hero-copy">
+                    <span class="hero-kicker"><i class="bi bi-lightning-charge-fill"></i> Live deals every day</span>
+                    <h1 class="hero-title">Shop hot deals. Post fast. Move stock.</h1>
+                    <p class="hero-subtitle">Fresh listings, local buyers, quick action.</p>
+                    <div class="hero-actions">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'product_list' %}" class="home-btn-primary">
+                            <i class="bi bi-bag"></i>
+                            Start Shopping
+                        </a>
+                        <a href="{% url 'create_product' %}" class="home-btn-secondary">
+                            <i class="bi bi-plus-circle"></i>
+                            Sell Now
+                        </a>
+                        {% else %}
+                        <a href="{% url 'signup' %}" class="home-btn-primary">
+                            <i class="bi bi-person-plus"></i>
+                            Sign Up to Shop
+                        </a>
+                        <a href="{% url 'signup' %}" class="home-btn-secondary">
+                            <i class="bi bi-person-plus"></i>
+                            Join to Sell
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="hero-categories">
+                        {% for category in featured_categories %}
+                        <a href="{% if user.is_authenticated %}{% url 'category_products' category.id %}{% else %}{% url 'signup' %}{% endif %}" class="category-chip">{{ category.name }}</a>
+                        {% empty %}
+                        <a href="{% if user.is_authenticated %}{% url 'product_list' %}{% else %}{% url 'signup' %}{% endif %}" class="category-chip">Browse Marketplace</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-lg-6 hero-stage">
+                    <div class="stage-shell">
+                        <img src="{% static 'accounts/img/hero.png' %}" alt="Marketplace illustration" class="stage-visual">
+                        <div class="stage-badge">
+                            <strong>New arrivals dropping</strong>
+                            <span>See what just hit the marketplace.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="quick-links">
+            <a href="{% if user.is_authenticated %}{% url 'product_list' %}{% else %}{% url 'signup' %}{% endif %}" class="quick-link"><i class="bi bi-phone"></i> Phones</a>
+            <a href="{% if user.is_authenticated %}{% url 'product_list' %}{% else %}{% url 'signup' %}{% endif %}" class="quick-link"><i class="bi bi-laptop"></i> Laptops</a>
+            <a href="{% if user.is_authenticated %}{% url 'product_list' %}{% else %}{% url 'signup' %}{% endif %}" class="quick-link"><i class="bi bi-controller"></i> Gaming</a>
+            <a href="{% if user.is_authenticated %}{% url 'product_list' %}{% else %}{% url 'signup' %}{% endif %}" class="quick-link"><i class="bi bi-house-door"></i> Home</a>
+            <a href="{% if user.is_authenticated %}{% url 'product_list' %}{% else %}{% url 'signup' %}{% endif %}" class="quick-link"><i class="bi bi-watch"></i> Accessories</a>
+        </div>
+
+        <div class="section-head">
+            <div>
+                <h2>Fresh listings</h2>
+                <p>Real products. Ready to move.</p>
+            </div>
+            <a href="{% if user.is_authenticated %}{% url 'product_list' %}{% else %}{% url 'signup' %}{% endif %}" class="home-btn-secondary">View all</a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+            {% for product in featured_products %}
+            <div class="col">
+                <article class="listing-card">
+                    <div class="listing-media">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                        <div class="listing-placeholder">
+                            <i class="bi bi-image"></i>
+                        </div>
+                        {% endif %}
+                        <span class="listing-tag">{{ product.category.name }}</span>
+                    </div>
+                    <div class="listing-body">
+                        <h3 class="listing-title">{{ product.name|truncatechars:38 }}</h3>
+                        <div class="listing-meta">
+                            <span class="listing-price">${{ product.price }}</span>
+                            {% if product.city %}
+                            <span class="listing-city"><i class="bi bi-geo-alt"></i> {{ product.city }}</span>
+                            {% endif %}
+                        </div>
+                        <a href="{% if user.is_authenticated %}{% url 'product_detail' product.id %}{% else %}{% url 'signup' %}{% endif %}" class="home-btn-secondary w-100">View Deal</a>
+                    </div>
+                </article>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="mini-banner">
+                    <h3>Marketplace is warming up</h3>
+                    <p>Be the first seller to drop something great.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mini-banner">
+            <div class="row align-items-center g-3">
+                <div class="col-lg-8">
+                    <h3>Ready to sell something today?</h3>
+                    <p>List it, price it, and get it in front of buyers fast.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'create_product' %}" class="home-btn-primary">Post a Product</a>
+                    {% else %}
+                    <a href="{% url 'signup' %}" class="home-btn-primary">Create Seller Account</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
 
 {% block content %}
-<div class="text-center py-5">
-    <h1 class="display-4 fw-bold">Kilobyte Marketplace</h1>
-    <p class="lead text-muted">A simple place to buy and sell items locally.</p>
-    <div class="mt-4 gap-2 d-flex justify-content-center">
-        <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg px-4">Browse Marketplace</a>
-        <a href="{% url 'login' %}" class="btn btn-outline-dark btn-lg px-4">Get Started</a>
-    </div>
-</div>
 {% endblock %}

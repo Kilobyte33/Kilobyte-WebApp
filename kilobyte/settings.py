@@ -28,6 +28,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'accounts.middleware.ZimbabweCountryAccessMiddleware',
 ]
 
 ROOT_URLCONF = 'kilobyte.urls'
@@ -77,3 +78,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'product_list'
 LOGOUT_REDIRECT_URL = 'landing'
 LOGIN_URL = 'login'
+
+ZIMBABWE_IP_RESTRICTION_ENABLED = True
+ZIMBABWE_IP_BLOCK_ON_MISSING_COUNTRY = True
+ZIMBABWE_GEOIP_HEADER_CANDIDATES = [
+    'HTTP_CF_IPCOUNTRY',
+    'HTTP_X_COUNTRY_CODE',
+    'HTTP_X_APPENGINE_COUNTRY',
+]

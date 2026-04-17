@@ -1,45 +1,188 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="Light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Kilobyte{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --kb-ink: #162033;
+            --kb-copy: #5b687d;
+            --kb-copy-soft: #7f8aa0;
+            --kb-bg: #eef3f9;
+            --kb-panel: rgba(255, 255, 255, 0.86);
+            --kb-panel-solid: #ffffff;
+            --kb-line: rgba(22, 32, 51, 0.10);
+            --kb-brand: #0f62fe;
+            --kb-brand-deep: #0a47b8;
+            --kb-shadow: 0 18px 50px rgba(15, 37, 74, 0.10);
+            --kb-navbar-bg: rgba(10, 18, 34, 0.92);
+            --kb-navbar-border: rgba(255, 255, 255, 0.08);
+            --kb-nav-text: rgba(255, 255, 255, 0.80);
+            --kb-nav-cta-bg: rgba(255, 255, 255, 0.10);
+            --kb-nav-cta-border: rgba(255, 255, 255, 0.12);
+            --kb-nav-cta-hover: rgba(255, 255, 255, 0.18);
+            --kb-alert-close-filter: none;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(15, 98, 254, 0.09), transparent 24%),
+                radial-gradient(circle at top right, rgba(21, 183, 158, 0.07), transparent 20%),
+                var(--kb-bg);
+            color: var(--kb-ink);
+            font-family: "Manrope", "Segoe UI", sans-serif;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .navbar {
+            background: var(--kb-navbar-bg) !important;
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--kb-navbar-border);
+        }
+
+        .navbar-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .brand-mark {
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1d75ff, #0a47b8);
+            color: #fff;
+            box-shadow: 0 12px 24px rgba(15, 98, 254, 0.30);
+        }
+
+        .navbar .nav-link,
+        .navbar .btn-link.nav-link {
+            color: var(--kb-nav-text);
+            font-weight: 600;
+        }
+
+        .navbar .nav-link:hover,
+        .navbar .btn-link.nav-link:hover {
+            color: #fff;
+        }
+
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.65rem 1rem !important;
+            border-radius: 999px;
+            background: var(--kb-nav-cta-bg);
+            border: 1px solid var(--kb-nav-cta-border);
+        }
+
+        .nav-cta:hover {
+            background: var(--kb-nav-cta-hover);
+        }
+
+        .theme-toggle {
+            width: 2.75rem;
+            height: 2.75rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            border: 1px solid var(--kb-nav-cta-border);
+            background: var(--kb-nav-cta-bg);
+            color: #fff;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-1px);
+            background: var(--kb-nav-cta-hover);
+        }
+
+        .navbar-toggler {
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        .page-shell {
+            padding-bottom: 4rem;
+        }
+
+        .alert {
+            border: 0;
+            border-radius: 1rem;
+            box-shadow: var(--kb-shadow);
+        }
+
+        .btn-close {
+            filter: var(--kb-alert-close-filter);
+        }
+
+        @media (max-width: 991.98px) {
+            .navbar-collapse {
+                margin-top: 1rem;
+                padding-top: 1rem;
+                border-top: 1px solid var(--kb-navbar-border);
+            }
+        }
+    </style>
+    {% block style %}{% endblock %}
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-expand-lg navbar-dark {% block nav_margin %}mb-4{% endblock %}">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'product_list' %}">Kilobyte</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <a class="navbar-brand" href="{% url 'product_list' %}">
+                <span class="brand-mark"><i class="bi bi-box-seam"></i></span>
+                <span>Kilobyte</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarMain">
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                     <li class="nav-item"><a class="nav-link" href="{% url 'product_list' %}">Marketplace</a></li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
+                
+                    </li>
                     {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'create_product' %}">Post Product</a></li>
+                    <li class="nav-item"><a class="nav-link nav-cta" href="{% url 'create_product' %}"><i class="bi bi-plus-circle"></i> Post Product</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'my_listings' %}">My Listings</a></li>
                     <li class="nav-item">
                         <form action="{% url 'logout' %}" method="post" class="d-inline">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-link nav-link">Logout ({{ user.username }})</button>
+                            <button type="submit" class="btn btn-link nav-link text-decoration-none">Logout ({{ user.username }})</button>
                         </form>
                     </li>
                     {% else %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Sign Up</a></li>
+                    <li class="nav-item"><a class="nav-link nav-cta" href="{% url 'signup' %}"><i class="bi bi-person-plus"></i> Sign Up</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container">
+    {% block full_width_content %}{% endblock %}
+
+    <div class="container page-shell">
         {% if messages %}
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
@@ -52,8 +195,38 @@
         {% block content %}{% endblock %}
     </div>
 
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (() => {
+            const root = document.documentElement;
+            const toggle = document.getElementById('themeToggle');
+            const icon = document.getElementById('themeToggleIcon');
+            const storageKey = 'kilobyte-theme';
+
+            const applyTheme = (theme) => {
+                root.setAttribute('data-theme', theme);
+                if (icon) {
+                    icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+                }
+                if (toggle) {
+                    toggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+                    toggle.setAttribute('title', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+                }
+            };
+
+            const savedTheme = localStorage.getItem(storageKey);
+            const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            applyTheme(savedTheme || preferredTheme);
+
+            if (toggle) {
+                toggle.addEventListener('click', () => {
+                    const nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    localStorage.setItem(storageKey, nextTheme);
+                    applyTheme(nextTheme);
+                });
+            }
+        })();
+    </script>
 </body>
 
 </html>
