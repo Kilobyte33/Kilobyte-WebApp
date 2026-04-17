@@ -9,7 +9,8 @@
     }
 
     .seller-hero,
-    .seller-panel,
+    .seller-form-card,
+    .seller-sidebar-card,
     .seller-submit {
         background: var(--kb-panel);
         border: 1px solid var(--kb-line);
@@ -18,22 +19,35 @@
     }
 
     .seller-hero {
-        padding: 2rem;
-        border-radius: 2rem;
-        overflow: hidden;
         position: relative;
+        overflow: hidden;
+        padding: 2.25rem;
+        border-radius: 2rem;
     }
 
+    .seller-hero::before,
     .seller-hero::after {
         content: "";
         position: absolute;
-        top: -4rem;
-        right: -4rem;
+        border-radius: 50%;
+        filter: blur(14px);
+        pointer-events: none;
+    }
+
+    .seller-hero::before {
+        top: -4.5rem;
+        right: -3rem;
         width: 14rem;
         height: 14rem;
-        border-radius: 50%;
-        background: rgba(15, 98, 254, 0.10);
-        filter: blur(8px);
+        background: rgba(15, 98, 254, 0.12);
+    }
+
+    .seller-hero::after {
+        left: -3rem;
+        bottom: -4rem;
+        width: 12rem;
+        height: 12rem;
+        background: rgba(21, 183, 158, 0.10);
     }
 
     .seller-kicker {
@@ -51,99 +65,174 @@
     }
 
     .seller-hero h1 {
-        margin: 1rem 0 0.6rem;
-        font-size: clamp(2rem, 4vw, 3.4rem);
-        line-height: 1;
+        margin: 1rem 0 0.7rem;
+        font-size: clamp(2.1rem, 4vw, 3.6rem);
+        line-height: 0.96;
         letter-spacing: -0.05em;
         font-weight: 800;
         color: var(--kb-ink);
     }
 
     .seller-hero p {
-        max-width: 40rem;
+        max-width: 42rem;
         margin: 0;
         color: var(--kb-copy);
         line-height: 1.75;
     }
 
-    .seller-panel,
+    .seller-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.85rem;
+        margin-top: 1.5rem;
+    }
+
+    .seller-stat {
+        min-width: 10rem;
+        padding: 0.95rem 1rem;
+        border-radius: 1.2rem;
+        background: rgba(255, 255, 255, 0.58);
+        border: 1px solid rgba(255, 255, 255, 0.65);
+    }
+
+    html[data-theme="dark"] .seller-stat {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(173, 193, 225, 0.10);
+    }
+
+    .seller-stat strong {
+        display: block;
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--kb-ink);
+    }
+
+    .seller-stat span {
+        display: block;
+        margin-top: 0.2rem;
+        color: var(--kb-copy);
+        font-size: 0.9rem;
+    }
+
+    .seller-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.7fr) minmax(18rem, 0.9fr);
+        gap: 1.5rem;
+        align-items: start;
+    }
+
+    .seller-form-card,
+    .seller-sidebar-card,
     .seller-submit {
         border-radius: 1.7rem;
     }
 
-    .seller-panel {
-        padding: 1.7rem;
+    .seller-form-card {
+        padding: 1.8rem;
     }
 
-    .panel-section + .panel-section {
+    .seller-sidebar {
+        display: grid;
+        gap: 1rem;
+        position: sticky;
+        top: 1.25rem;
+    }
+
+    .seller-sidebar-card {
+        padding: 1.25rem;
+    }
+
+    .form-section + .form-section {
         margin-top: 2rem;
         padding-top: 2rem;
-        border-top: 1px solid rgba(22, 32, 51, 0.08);
+        border-top: 1px solid var(--kb-line);
     }
 
-    .panel-title {
-        margin-bottom: 0.35rem;
+    .section-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: start;
+        margin-bottom: 1.2rem;
+    }
+
+    .section-title {
+        margin-bottom: 0.3rem;
         font-size: 1.2rem;
         font-weight: 800;
         color: var(--kb-ink);
     }
 
-    .panel-copy {
-        margin-bottom: 1.15rem;
+    .section-copy {
+        margin: 0;
         color: var(--kb-copy);
         font-size: 0.95rem;
     }
 
-    .seller-panel .form-label {
+    .section-badge {
+        padding: 0.55rem 0.8rem;
+        border-radius: 999px;
+        background: rgba(15, 98, 254, 0.08);
+        color: var(--kb-brand-deep);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .field-group {
+        margin-bottom: 1rem;
+    }
+
+    .field-label {
+        display: block;
         margin-bottom: 0.45rem;
         font-size: 0.82rem;
         font-weight: 800;
-        letter-spacing: 0.02em;
+        letter-spacing: 0.03em;
         text-transform: uppercase;
         color: var(--kb-ink);
     }
 
-    .seller-panel .form-control,
-    .seller-panel .form-select {
-        min-height: 3.2rem;
+    .field-hint {
+        margin-top: 0.45rem;
+        color: var(--kb-copy-soft);
+        font-size: 0.92rem;
+        line-height: 1.6;
+    }
+
+    .field-error {
+        margin-top: 0.45rem;
+        color: #9f1c2d;
+        font-size: 0.92rem;
+        font-weight: 700;
+    }
+
+    .seller-form-card .form-control,
+    .seller-form-card .form-select {
+        min-height: 3.25rem;
         border-radius: 1rem;
         border: 1px solid var(--kb-line);
-        background: rgba(255, 255, 255, 0.94);
+        background: var(--kb-panel-solid);
         color: var(--kb-ink);
         padding: 0.9rem 1rem;
         box-shadow: none;
     }
 
-    html[data-theme="dark"] .seller-panel .form-control,
-    html[data-theme="dark"] .seller-panel .form-select {
-        background: rgba(10, 18, 34, 0.72);
-        color: var(--kb-ink);
-    }
-
-    html[data-theme="dark"] .seller-panel .form-control::placeholder {
-        color: var(--kb-copy-soft);
-    }
-
-    .seller-panel textarea.form-control {
-        min-height: 9rem;
+    .seller-form-card textarea.form-control {
+        min-height: 10rem;
         resize: vertical;
     }
 
-    .seller-panel .form-control:focus,
-    .seller-panel .form-select:focus {
+    .seller-form-card .form-control:focus,
+    .seller-form-card .form-select:focus {
         border-color: rgba(15, 98, 254, 0.45);
         box-shadow: 0 0 0 0.2rem rgba(15, 98, 254, 0.10);
     }
 
-    .seller-panel input[type="file"] {
+    .seller-form-card input[type="file"].form-control {
         padding-top: 0.75rem;
-    }
-
-    .field-note,
-    .seller-shell p {
-        color: var(--kb-copy);
-        font-size: 0.94rem;
-        line-height: 1.7;
     }
 
     .seller-errors {
@@ -153,11 +242,61 @@
         background: rgba(220, 53, 69, 0.08);
         color: #9f1c2d;
         border: 1px solid rgba(220, 53, 69, 0.12);
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+
+    .photo-stage {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(12rem, 0.9fr);
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .upload-box {
+        padding: 1rem;
+        border-radius: 1.25rem;
+        background: rgba(15, 98, 254, 0.04);
+        border: 1px dashed rgba(15, 98, 254, 0.24);
+    }
+
+    .image-preview-card {
+        display: grid;
+        place-items: center;
+        min-height: 14rem;
+        padding: 1rem;
+        border-radius: 1.25rem;
+        background: linear-gradient(180deg, rgba(15, 98, 254, 0.08), rgba(255, 255, 255, 0.55));
+        border: 1px solid rgba(15, 98, 254, 0.12);
+        overflow: hidden;
+    }
+
+    html[data-theme="dark"] .image-preview-card {
+        background: linear-gradient(180deg, rgba(15, 98, 254, 0.12), rgba(255, 255, 255, 0.03));
+    }
+
+    .image-preview-card img {
+        width: 100%;
+        height: 100%;
+        max-height: 16rem;
+        object-fit: cover;
+        border-radius: 1rem;
+    }
+
+    .image-preview-empty {
+        text-align: center;
+        color: var(--kb-copy-soft);
+    }
+
+    .image-preview-empty i {
+        display: block;
+        margin-bottom: 0.7rem;
+        font-size: 2rem;
     }
 
     .wholesale-box {
-        padding: 1.1rem;
-        border-radius: 1.2rem;
+        padding: 1.2rem;
+        border-radius: 1.3rem;
         background: rgba(15, 98, 254, 0.05);
         border: 1px solid rgba(15, 98, 254, 0.10);
     }
@@ -170,20 +309,107 @@
     }
 
     .wholesale-toggle .form-check-input {
-        width: 1.1rem;
-        height: 1.1rem;
+        width: 1.15rem;
+        height: 1.15rem;
         margin-top: 0;
     }
 
     .wholesale-toggle .form-check-label {
         margin-bottom: 0;
-        font-size: 0.95rem;
+        font-size: 0.96rem;
         font-weight: 800;
-        text-transform: none;
+        color: var(--kb-ink);
+    }
+
+    .wholesale-fields.is-hidden {
+        display: none;
+    }
+
+    .checklist,
+    .mini-list {
+        display: grid;
+        gap: 0.7rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .checklist li,
+    .mini-list li {
+        display: flex;
+        gap: 0.7rem;
+        align-items: start;
+        color: var(--kb-copy);
+        line-height: 1.6;
+    }
+
+    .checklist i,
+    .mini-list i {
+        color: var(--kb-brand);
+        margin-top: 0.2rem;
+    }
+
+    .sidebar-title {
+        margin-bottom: 0.35rem;
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--kb-ink);
+    }
+
+    .sidebar-copy {
+        margin-bottom: 1rem;
+        color: var(--kb-copy);
+        font-size: 0.94rem;
+        line-height: 1.65;
+    }
+
+    .preview-card {
+        padding: 1rem;
+        border-radius: 1.2rem;
+        background: rgba(255, 255, 255, 0.52);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+
+    html[data-theme="dark"] .preview-card {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(173, 193, 225, 0.10);
+    }
+
+    .preview-eyebrow {
+        display: inline-flex;
+        padding: 0.35rem 0.65rem;
+        border-radius: 999px;
+        background: rgba(15, 98, 254, 0.10);
+        color: var(--kb-brand-deep);
+        font-size: 0.74rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .preview-title {
+        margin: 0.8rem 0 0.35rem;
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--kb-ink);
+    }
+
+    .preview-meta,
+    .preview-copy {
+        color: var(--kb-copy);
+        font-size: 0.92rem;
+    }
+
+    .preview-price {
+        margin: 0.7rem 0 0.15rem;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--kb-brand-deep);
     }
 
     .seller-submit {
-        padding: 1.4rem;
+        margin-top: 1.5rem;
+        padding: 1.35rem;
     }
 
     .seller-submit h2 {
@@ -209,7 +435,7 @@
         border-radius: 999px;
         font-weight: 700;
         text-decoration: none;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     }
 
     .btn-seller-primary {
@@ -222,11 +448,37 @@
     .btn-seller-secondary {
         color: var(--kb-ink);
         background: rgba(22, 32, 51, 0.06);
+        border: 1px solid transparent;
     }
 
     .btn-seller-primary:hover,
     .btn-seller-secondary:hover {
         transform: translateY(-2px);
+    }
+
+    @media (max-width: 991.98px) {
+        .seller-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .seller-sidebar {
+            position: static;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .seller-hero,
+        .seller-form-card {
+            padding: 1.35rem;
+        }
+
+        .photo-stage {
+            grid-template-columns: 1fr;
+        }
+
+        .section-head {
+            display: block;
+        }
     }
 </style>
 {% endblock %}
@@ -234,134 +486,233 @@
 {% block content %}
 <div class="seller-shell">
     <section class="seller-hero">
-        <div class="row align-items-center g-3 position-relative">
-            <div class="col-lg-8">
-                <span class="seller-kicker"><i class="bi bi-shop"></i> Seller studio</span>
-                <h1>Create a listing that looks ready to sell.</h1>
-                <p>Clean details, a strong photo, and the right price give buyers confidence fast.</p>
-            </div>
-            <div class="col-lg-4 text-lg-end">
-                <a href="{% url 'my_listings' %}" class="btn-seller-secondary">View My Listings</a>
+        <div class="position-relative">
+            <span class="seller-kicker"><i class="bi bi-shop-window"></i> Seller studio</span>
+            <h1>Post your product in the marketplace</h1>
+        
+            <div class="seller-stats">
+                <div class="seller-stat">
+                    <strong>Clear details</strong>
+                    <span>Help buyers understand exactly what you are selling.</span>
+                </div>
+                <div class="seller-stat">
+                    <strong>Better photos</strong>
+                    <span>Strong images usually improve clicks and replies.</span>
+                </div>
+                <div class="seller-stat">
+                    <strong>Fast publishing</strong>
+                    <span>Post now and manage everything from your listings page.</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="seller-panel">
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
+    <div class="seller-grid">
+        <section class="seller-form-card">
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
 
-            {% if form.errors %}
-            <div class="seller-errors small">
-                Please fix the highlighted fields and try again.
-            </div>
-            {% endif %}
-
-            <div class="panel-section">
-                <h2 class="panel-title">Product details</h2>
-                <p class="panel-copy">Start with the information buyers notice first.</p>
-
-                <div class="mb-3">
-                    <label class="form-label" for="{{ form.name.id_for_label }}">Product Name</label>
-                    {{ form.name }}
-                    {% if form.name.errors %}<div class="text-danger small mt-1">{{ form.name.errors|striptags }}</div>{% endif %}
+                {% if form.errors %}
+                <div class="seller-errors">
+                    Please fix the highlighted fields and try again.
                 </div>
+                {% endif %}
 
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label" for="{{ form.category.id_for_label }}">Category</label>
-                        {{ form.category }}
-                        {% if form.category.errors %}<div class="text-danger small mt-1">{{ form.category.errors|striptags }}</div>{% endif %}
+                <div class="form-section">
+                    <div class="section-head">
+                        <div>
+                            <h2 class="section-title">Product details</h2>
+                            <p class="section-copy">please fill in all the required fields</p>
+                        </div>
+                        <span class="section-badge">Step 1</span>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label" for="{{ form.city.id_for_label }}">City</label>
-                        {{ form.city }}
-                        {% if form.city.errors %}<div class="text-danger small mt-1">{{ form.city.errors|striptags }}</div>{% endif %}
-                    </div>
-                </div>
 
-                <div class="mb-3">
-                    <label class="form-label" for="{{ form.description.id_for_label }}">Description</label>
-                    {{ form.description }}
-                    <div class="field-note mt-2">Keep it clear, short, and specific.</div>
-                    {% if form.description.errors %}<div class="text-danger small mt-1">{{ form.description.errors|striptags }}</div>{% endif %}
-                </div>
-            </div>
-
-            <div class="panel-section">
-                <h2 class="panel-title">Pricing and contact</h2>
-                <p class="panel-copy">Make it easy for serious buyers to decide quickly.</p>
-
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label" for="{{ form.price.id_for_label }}">Price ($)</label>
-                        {{ form.price }}
-                        {% if form.price.errors %}<div class="text-danger small mt-1">{{ form.price.errors|striptags }}</div>{% endif %}
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label" for="{{ form.phone.id_for_label }}">Phone Number</label>
-                        {{ form.phone }}
-                        {% if form.phone.errors %}<div class="text-danger small mt-1">{{ form.phone.errors|striptags }}</div>{% endif %}
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label" for="{{ form.image.id_for_label }}">Product Image</label>
-                    {{ form.image }}
-                    <div class="field-note mt-2">Bright, clean photos usually perform best.</div>
-                    {% if form.image.errors %}<div class="text-danger small mt-1">{{ form.image.errors|striptags }}</div>{% endif %}
-                </div>
-            </div>
-
-            <div class="panel-section">
-                <h2 class="panel-title">Wholesale options</h2>
-                <p class="panel-copy">Turn this on only if you are selling in bulk.</p>
-
-                <div class="wholesale-box">
-                    <div class="wholesale-toggle form-check">
-                        {{ form.is_wholesale }}
-                        <label class="form-check-label" for="{{ form.is_wholesale.id_for_label }}">This is a bulk listing</label>
+                    <div class="field-group">
+                        <label class="field-label" for="{{ form.name.id_for_label }}">Product Name</label>
+                        {{ form.name }}
+                        <div class="field-hint">Use a specific name like brand, model, size, or condition.</div>
+                        {% if form.name.errors %}<div class="field-error">{{ form.name.errors|striptags }}</div>{% endif %}
                     </div>
 
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label" for="{{ form.bulk_price.id_for_label }}">Bulk Price</label>
-                            {{ form.bulk_price }}
-                            {% if form.bulk_price.errors %}<div class="text-danger small mt-1">{{ form.bulk_price.errors|striptags }}</div>{% endif %}
+                            <div class="field-group mb-md-0">
+                                <label class="field-label" for="{{ form.category.id_for_label }}">Category</label>
+                                {{ form.category }}
+                                {% if form.category.errors %}<div class="field-error">{{ form.category.errors|striptags }}</div>{% endif %}
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" for="{{ form.minimum_quantity.id_for_label }}">Minimum Quantity</label>
-                            {{ form.minimum_quantity }}
-                            {% if form.minimum_quantity.errors %}<div class="text-danger small mt-1">{{ form.minimum_quantity.errors|striptags }}</div>{% endif %}
+                            <div class="field-group mb-0">
+                                <label class="field-label" for="{{ form.city.id_for_label }}">City</label>
+                                {{ form.city }}
+                                {% if form.city.errors %}<div class="field-error">{{ form.city.errors|striptags }}</div>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field-group mt-3 mb-0">
+                        <label class="field-label" for="{{ form.description.id_for_label }}">Description</label>
+                        {{ form.description }}
+                        <div class="field-hint">Mention condition, key features, what is included, and anything buyers should know before contacting you.</div>
+                        {% if form.description.errors %}<div class="field-error">{{ form.description.errors|striptags }}</div>{% endif %}
+                    </div>
+                </div>
+
+            
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="field-group mb-md-0">
+                                <label class="field-label" for="{{ form.price.id_for_label }}">Price ($)</label>
+                                {{ form.price }}
+                                <div class="field-hint">Use a clean number buyers can compare quickly.</div>
+                                {% if form.price.errors %}<div class="field-error">{{ form.price.errors|striptags }}</div>{% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field-group mb-0">
+                                <label class="field-label" for="{{ form.phone.id_for_label }}">Phone Number</label>
+                                {{ form.phone }}
+                                <div class="field-hint">Add the number buyers should use to reach you.</div>
+                                {% if form.phone.errors %}<div class="field-error">{{ form.phone.errors|striptags }}</div>{% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="seller-submit mt-4">
-                <h2>Ready to publish?</h2>
-                <p>Your listing will go live as soon as you post it.</p>
-                <div class="row g-3">
-                    <div class="col-md-8">
-                        <button type="submit" class="btn-seller-primary">
-                            <i class="bi bi-send"></i>
-                            Post Product
-                        </button>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="{% url 'my_listings' %}" class="btn-seller-secondary">Cancel</a>
+            
+
+                    <div class="photo-stage">
+                        <div class="upload-box">
+                            <div class="field-group mb-0">
+                                <label class="field-label" for="{{ form.image.id_for_label }}">Product Image</label>
+                                {{ form.image }}
+                                <div class="field-hint">Use a bright photo with the product centered and the background kept simple.</div>
+                                {% if form.image.errors %}<div class="field-error">{{ form.image.errors|striptags }}</div>{% endif %}
+                            </div>
+                        </div>
+                        <div class="image-preview-card" id="imagePreviewCard">
+                            <div class="image-preview-empty" id="imagePreviewEmpty">
+                                <i class="bi bi-image"></i>
+                                <div>Image preview will appear here</div>
+                            </div>
+                            <img id="imagePreview" alt="Selected product image preview" style="display:none;">
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
-    </section>
+
+                <div class="form-section">
+                    <div class="section-head">
+                        <div>
+                            <h2 class="section-title">Wholesale options</h2>
+                            <p class="section-copy">Only turn this on if this listing is meant for bulk orders.</p>
+                        </div>
+                        <span class="section-badge">Optional</span>
+                    </div>
+
+                    <div class="wholesale-box">
+                        <div class="wholesale-toggle form-check">
+                            {{ form.is_wholesale }}
+                            <label class="form-check-label" for="{{ form.is_wholesale.id_for_label }}">This is a wholesale or bulk listing</label>
+                        </div>
+
+                        <div class="wholesale-fields" id="wholesaleFields">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="field-group mb-md-0">
+                                        <label class="field-label" for="{{ form.bulk_price.id_for_label }}">Bulk Price</label>
+                                        {{ form.bulk_price }}
+                                        {% if form.bulk_price.errors %}<div class="field-error">{{ form.bulk_price.errors|striptags }}</div>{% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="field-group mb-0">
+                                        <label class="field-label" for="{{ form.minimum_quantity.id_for_label }}">Minimum Quantity</label>
+                                        {{ form.minimum_quantity }}
+                                        {% if form.minimum_quantity.errors %}<div class="field-error">{{ form.minimum_quantity.errors|striptags }}</div>{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="seller-submit">
+                    <h2>Ready to publish?</h2>
+                    <p>Your product will appear in the marketplace as soon as you post it.</p>
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <button type="submit" class="btn-seller-primary">
+                                <i class="bi bi-send"></i>
+                                Post Product
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{% url 'my_listings' %}" class="btn-seller-secondary">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        
+
+            <section class="seller-sidebar-card">
+                <a href="{% url 'my_listings' %}" class="btn-seller-secondary">View My Listings</a>
+            </section>
+        </aside>
+    </div>
 </div>
 
 <script>
-    document.querySelectorAll('input, select, textarea').forEach(el => {
-        if (el.type !== 'checkbox' && el.type !== 'radio') {
-            el.classList.add('form-control');
-            if (el.tagName === 'SELECT') el.classList.add('form-select');
+    document.querySelectorAll('input, select, textarea').forEach((el) => {
+        if (el.type === 'checkbox' || el.type === 'radio') {
+            return;
         }
+
+        if (el.tagName === 'SELECT') {
+            el.classList.add('form-select');
+            return;
+        }
+
+        el.classList.add('form-control');
     });
+
+    const wholesaleToggle = document.getElementById('{{ form.is_wholesale.id_for_label }}');
+    const wholesaleFields = document.getElementById('wholesaleFields');
+
+    const syncWholesaleFields = () => {
+        if (!wholesaleToggle || !wholesaleFields) {
+            return;
+        }
+        wholesaleFields.classList.toggle('is-hidden', !wholesaleToggle.checked);
+    };
+
+    syncWholesaleFields();
+    if (wholesaleToggle) {
+        wholesaleToggle.addEventListener('change', syncWholesaleFields);
+    }
+
+    const imageInput = document.getElementById('{{ form.image.id_for_label }}');
+    const imagePreview = document.getElementById('imagePreview');
+    const imagePreviewEmpty = document.getElementById('imagePreviewEmpty');
+
+    if (imageInput && imagePreview && imagePreviewEmpty) {
+        imageInput.addEventListener('change', (event) => {
+            const [file] = event.target.files || [];
+            if (!file) {
+                imagePreview.style.display = 'none';
+                imagePreview.removeAttribute('src');
+                imagePreviewEmpty.style.display = 'block';
+                return;
+            }
+
+            const objectUrl = URL.createObjectURL(file);
+            imagePreview.src = objectUrl;
+            imagePreview.style.display = 'block';
+            imagePreviewEmpty.style.display = 'none';
+        });
+    }
 </script>
 {% endblock %}

@@ -54,6 +54,14 @@ class ZimbabweAuthenticationForm(AuthenticationForm):
             )
 
 
+class UserEditForm(forms.ModelForm):
+    email = forms.EmailField(required=True, label='Email')
+
+    class Meta:
+        model = User
+        fields = ('username', 'email')
+
+
 class ProfileForm(forms.ModelForm):
     def clean_location(self):
         location = self.cleaned_data["location"]

@@ -122,3 +122,34 @@ class ZimbabweAccessTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
+
+    def test_edit_profile_updates_user_and_profile_fields(self):
+        user = User.objects.create_user(
+            username="oldname",
+            email="old@example.com",
+            password="StrongPassword123",
+        )
+        user.profile.phone = "111"
+        user.profile.location = "Zimbabwe"
+        user.profile.save(update_fields=["phone", "location"])
+
+        self.client.force_login(user)
+        response = self.client.post(
+            reverse("edit_profile"),
+            data={
+                "username": "newname",
+                "email": "new@example.com",
+                "bio": "Updated bio",
+                "phone": "222",
+                "location": "zim",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        user.refresh_from_db()
+        user.profile.refresh_from_db()
+        self.assertEqual(user.username, "newname")
+        self.assertEqual(user.email, "new@example.com")
+        self.assertEqual(user.profile.bio, "Updated bio")
+        self.assertEqual(user.profile.phone, "222")
+        self.assertEqual(user.profile.location, "Zimbabwe")

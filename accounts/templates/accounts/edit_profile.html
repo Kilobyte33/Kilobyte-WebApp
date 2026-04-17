@@ -1,37 +1,209 @@
 {% extends 'base.html' %}
-{% block title %}Edit Profile — Kilobyte{% endblock %}
+{% block title %}Edit Profile - Kilobyte{% endblock %}
+
+{% block style %}
+<style>
+    .profile-shell {
+        max-width: 48rem;
+        margin: 0 auto;
+    }
+
+    .profile-card {
+        background: var(--kb-panel);
+        border: 1px solid var(--kb-line);
+        border-radius: 1.75rem;
+        box-shadow: var(--kb-shadow);
+        backdrop-filter: blur(14px);
+        overflow: hidden;
+    }
+
+    .profile-card-body {
+        padding: 2rem;
+    }
+
+    .profile-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.45rem 0.85rem;
+        border-radius: 999px;
+        background: rgba(15, 98, 254, 0.10);
+        color: var(--kb-brand-deep);
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .profile-title {
+        margin: 1rem 0 0.55rem;
+        font-size: clamp(1.9rem, 4vw, 2.5rem);
+        line-height: 1;
+        letter-spacing: -0.05em;
+        font-weight: 800;
+        color: var(--kb-ink);
+    }
+
+    .profile-copy {
+        margin-bottom: 1.75rem;
+        color: var(--kb-copy);
+        line-height: 1.7;
+    }
+
+    .profile-field {
+        margin-bottom: 1.2rem;
+    }
+
+    .profile-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--kb-copy);
+    }
+
+    .profile-field .form-control,
+    .profile-field .form-select {
+        min-height: 3.1rem;
+        border-radius: 1rem;
+        border: 1px solid var(--kb-line);
+        background: var(--kb-panel-solid);
+        color: var(--kb-ink);
+        padding: 0.85rem 1rem;
+    }
+
+    .profile-field textarea.form-control {
+        min-height: 8rem;
+        resize: vertical;
+    }
+
+    .profile-field .form-control:focus,
+    .profile-field .form-select:focus {
+        border-color: rgba(15, 98, 254, 0.45);
+        box-shadow: 0 0 0 0.2rem rgba(15, 98, 254, 0.10);
+    }
+
+    .profile-field input[type="file"].form-control {
+        padding: 0.65rem 0.85rem;
+    }
+
+    .profile-hint {
+        margin-top: 0.45rem;
+        color: var(--kb-copy-soft);
+        font-size: 0.92rem;
+    }
+
+    .profile-error {
+        margin-top: 0.45rem;
+        color: #dc3545;
+        font-size: 0.92rem;
+        font-weight: 600;
+    }
+
+    .profile-avatar-preview {
+        width: 5.5rem;
+        height: 5.5rem;
+        margin-bottom: 1rem;
+        border-radius: 1.4rem;
+        object-fit: cover;
+        background: var(--kb-panel-solid);
+        border: 1px solid var(--kb-line);
+        box-shadow: var(--kb-shadow);
+    }
+
+    .profile-submit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+        width: 100%;
+        min-height: 3.25rem;
+        border: 0;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--kb-brand), var(--kb-brand-deep));
+        color: #fff;
+        font-weight: 800;
+        box-shadow: 0 16px 28px rgba(15, 98, 254, 0.20);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .profile-submit:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 18px 30px rgba(15, 98, 254, 0.24);
+    }
+
+    @media (max-width: 575.98px) {
+        .profile-card-body {
+            padding: 1.35rem;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-7">
-        <div class="card border">
-            <div class="card-body p-4">
-                <h2 class="h4 mb-4">Edit Profile</h2>
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {% for field in form %}
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.errors %}
-                        <div class="text-danger x-small mt-1">{{ field.errors|striptags }}</div>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </div>
-                </form>
-            </div>
+<section class="profile-shell">
+    <div class="profile-card">
+        <div class="profile-card-body">
+            <span class="profile-kicker"><i class="bi bi-person-gear"></i> Account settings</span>
+            <h1 class="profile-title">Edit your profile</h1>
+            <p class="profile-copy">Update your account details, contact information, and profile photo.</p>
+
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+
+                {% if profile_form.instance.avatar %}
+                <img src="{{ profile_form.instance.avatar.url }}" alt="Current avatar" class="profile-avatar-preview">
+                {% endif %}
+
+                {% for field in user_form %}
+                <div class="profile-field">
+                    <label class="profile-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <div class="profile-hint">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div class="profile-error">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                {% for field in profile_form %}
+                <div class="profile-field">
+                    <label class="profile-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <div class="profile-hint">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div class="profile-error">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="profile-submit">
+                    <i class="bi bi-check2-circle"></i>
+                    Save Changes
+                </button>
+            </form>
         </div>
     </div>
-</div>
+</section>
 
 <script>
-    document.querySelectorAll('input, select, textarea').forEach(el => {
-        if (el.type !== 'checkbox' && el.type !== 'radio') {
-            el.classList.add('form-control');
+    document.querySelectorAll('input, select, textarea').forEach((el) => {
+        if (el.type === 'checkbox' || el.type === 'radio') {
+            return;
         }
+
+        if (el.tagName === 'SELECT') {
+            el.classList.add('form-select');
+            return;
+        }
+
+        el.classList.add('form-control');
     });
 </script>
 {% endblock %}
